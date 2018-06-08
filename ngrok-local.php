@@ -30,10 +30,13 @@ class Ngrok_Local {
 	public function template_redirect() {
 		if ( ! isset( $_GET['wp_ngrok_autoload'] ) ) {
 			$protocol = is_ssl() ? 'https://' : 'http://';
+			if ( ! defined('FRONTEND') ) {
+				define('FRONTEND', $_SERVER['SERVER_NAME']);
+			}
 			echo str_replace(
 				$this->site_url,
 				wp_make_link_relative( $this->site_url ),
-				file_get_contents( add_query_arg( 'wp_ngrok_autoload', 1, $protocol . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] ) )
+				file_get_contents( add_query_arg( 'wp_ngrok_autoload', 1, $protocol . constant('FRONTEND') . $_SERVER['REQUEST_URI'] ) )
 			);
 			exit;
 		}
